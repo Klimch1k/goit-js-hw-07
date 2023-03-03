@@ -39,7 +39,20 @@ function onImageClick(evt) {
   if (evt.target.nodeName !== "IMG") {
     return;
   }
-
   evt.target.src = evt.target.dataset.source;
-  console.log(evt.target);
+  const modal = basicLightbox.create(`
+    <div class="modal"><img src="${evt.target.src}" width="800" height="600"></div>
+`);
+
+  modal.show();
+
+  // Закриття модального вікна після натискання клавіші Escape
+
+  window.addEventListener("keydown", onEscapePress, { once: true });
+
+  function onEscapePress(event) {
+    if (event.code === "Escape") {
+      modal.close();
+    }
+  }
 }
