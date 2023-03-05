@@ -24,18 +24,12 @@ function createGalleryMarkup() {
     .join("");
 }
 
-// Заборона поведінки за замовчуванням на посиланні (завантаження картинки)
-const galleryLinks = document.querySelectorAll(".gallery__link");
-
-galleryLinks.forEach((galleryLink) =>
-  galleryLink.addEventListener("click", (event) => event.preventDefault())
-);
-
 // Реалізація делегування на div.gallery і отримання url великого зображення.
 
 galleryContainer.addEventListener("click", onImageClick);
 
 function onImageClick(evt) {
+  evt.preventDefault();
   if (evt.target.nodeName !== "IMG") {
     return;
   }
@@ -45,14 +39,30 @@ function onImageClick(evt) {
 `);
 
   modal.show();
+ 
+  
+  // Закриття модального вікна після натискання клавіші Escape та на кліку на картинку
 
-  // Закриття модального вікна після натискання клавіші Escape
-
-  window.addEventListener("keydown", onEscapePress, { once: true });
+  window
+    .addEventListener("keydown", onEscapePress);
 
   function onEscapePress(event) {
     if (event.code === "Escape") {
       modal.close();
+      window.removeEventListener("keydown", onEscapePress);
     }
   }
+
+  const modalImage = modal.element().querySelector("img");
+  modalImage.addEventListener("click", onCloseClick);
+
+ 
+  function onCloseClick() {
+    modal.close();
+ modalImage.removeEventListener("click", onCloseClick);
+  }
+
+  
 }
+
+
